@@ -3,7 +3,6 @@ import org.flywaydb.core.Flyway;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Properties;
@@ -51,6 +50,7 @@ public class Main {
             readListFiveOrders(connection);
             updatePriceAndStocks(connection);
             deleteTestRecords(connection);
+            readListCategory(connection);
 
             connection.commit();// фиксируем изменения
 
@@ -77,24 +77,37 @@ public class Main {
     }
     private static void creatOrdreForCustomer(Connection connection) throws Exception {
         PreparedStatement ps = connection.prepareStatement("INSERT INTO orders(product_id, customer_id, quantity, status_id) VALUES (?, ?, ?, ?)");
-        ps.setInt(1, 1);
+        ps.setInt(1, 5);
         ps.setInt(2, 1);
         ps.setInt(3, 2);
         ps.setInt(4, 1);
         ps.executeUpdate();
     }
     private static void readListFiveOrders(Connection connection) throws Exception {
-        PreparedStatement ps = connection.prepareStatement("SELECT * FROM orders ORDERD BY id DESC LIMIT 5");
+        PreparedStatement ps = connection.prepareStatement("SELECT * FROM orders ORDER by id DESC LIMIT 5");
         ResultSet resultSet = ps.executeQuery();
         while (resultSet.next()){
             System.out.println("Заказ №" + resultSet.getInt("id") + ": Продукт = " + resultSet.getInt("product_id") + ", Клиент = " +  resultSet.getInt("customer_id"));
         }
     }
+    private static void readListCategory(Connection connection) throws Exception {
+        PreparedStatement ps = connection.prepareStatement("select * from product where category = 'Electronics'");
+        ResultSet resultSet = ps.executeQuery();
+        while (resultSet.next()){
+            System.out.println("Категория 'Electronics': Продукт: " + resultSet.getString("description") + ", цена = " + resultSet.getDouble("price") + ", количество = " +  resultSet.getInt("quantity"));
+        }
+        ps = connection.prepareStatement("select * from product where category = 'Clothing'");
+        ResultSet resultSet1 = ps.executeQuery();
+        while (resultSet1.next()){
+            System.out.println("Категория 'Clothing': Продукт: " + resultSet1.getString("description") + ", цена = " + resultSet1.getDouble("price") + ", количество = " +  resultSet1.getInt("quantity"));
+        }
+    }
+
     private static void updatePriceAndStocks(Connection connection) throws Exception {
         PreparedStatement ps = connection.prepareStatement("UPDATE product SET price = price* 1.1, quantity = quantity-1 WHERE id = ?");
-        ps.setInt(1,1);
+        ps.setInt(1,5);
         int rowsUpdated = ps.executeUpdate();
-        System.out.println(rowsUpdated + " строки обновлены");
+        System.out.println(rowsUpdated + " строки обновлены.");
     }
     private static void deleteTestRecords(Connection connection) throws Exception {
         PreparedStatement ps = connection.prepareStatement("DELETE FROM product WHERE id = ?");
