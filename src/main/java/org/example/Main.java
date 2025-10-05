@@ -61,26 +61,26 @@ public class Main {
     }
     private static void insertNewProductAndCastomer(Connection connection) throws Exception{
         PreparedStatement ps = connection.prepareStatement("INSERT INTO product(description, price, quantity, category) VALUES (?, ?, ?, ?)");
-        ps.setString(1, "Наушники");
-        ps.setDouble(2, 500.00);
-        ps.setInt(3, 12);
+        ps.setString(1, "Плеер");
+        ps.setDouble(2, 3000.00);
+        ps.setInt(3, 25);
         ps.setString(4,"Электроника");
         ps.executeUpdate();
 
         ps = connection.prepareStatement("INSERT INTO customer(first_name, last_name, phone, email) VALUES (?, ?, ?, ?)");
-        ps.setString(1, "Петр");
-        ps.setString(2, "Сидоров");
-        ps.setString(3, "921 5478965");
-        ps.setString(4,"fgh@ya.ru");
+        ps.setString(1, "Наталия");
+        ps.setString(2, "Бравая");
+        ps.setString(3, "922 5478965");
+        ps.setString(4,"hgf@ya.ru");
         ps.executeUpdate();
 
     }
     private static void creatOrdreForCustomer(Connection connection) throws Exception {
         PreparedStatement ps = connection.prepareStatement("INSERT INTO orders(product_id, customer_id, quantity, status_id) VALUES (?, ?, ?, ?)");
-        ps.setInt(1, 5);
-        ps.setInt(2, 1);
-        ps.setInt(3, 2);
-        ps.setInt(4, 1);
+        ps.setInt(1, 9);
+        ps.setInt(2, 2);
+        ps.setInt(3, 1);
+        ps.setInt(4, 2);
         ps.executeUpdate();
     }
     private static void readListFiveOrders(Connection connection) throws Exception {
@@ -105,7 +105,7 @@ public class Main {
 
     private static void updatePriceAndStocks(Connection connection) throws Exception {
         PreparedStatement ps = connection.prepareStatement("UPDATE product SET price = price* 1.1, quantity = quantity-1 WHERE id = ?");
-        ps.setInt(1,5);
+        ps.setInt(1,6);
         int rowsUpdated = ps.executeUpdate();
         System.out.println(rowsUpdated + " строки обновлены.");
     }
